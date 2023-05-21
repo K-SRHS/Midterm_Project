@@ -4,13 +4,13 @@
 
 ## 정규표현의 필요성
 ### 1. 문자열 검색 및 매칭
-정규 표현식은 특정 패턴을 가진 문자열을 검색하고 매칭할 수 있습니다. 이는 텍스트 데이터에서 원하는 정보를 추출하거나 특정 패턴을 찾는 데 매우 유용합니다.<br>
+정규 표현식은 특정 패턴을 가진 문자열을 검색하고 매칭할 수 있다. 이는 텍스트 데이터에서 원하는 정보를 추출하거나 특정 패턴을 찾는 데 매우 유용하다.<br>
 
 ### 2. 데이터 유효성 검증
-정규 표현식을 사용하여 입력된 데이터의 유효성을 검증할 수 있습니다. 데이터의 형식이 특정한 규칙을 따르는지 확인하거나, 특정한 조건을 만족하는지 확인하는 등의 작업에 사용됩니다.
+정규 표현식을 사용하여 입력된 데이터의 유효성을 검증할 수 있다. 데이터의 형식이 특정한 규칙을 따르는지 확인하거나, 특정한 조건을 만족하는지 확인하는 등의 작업에 사용된다.
 
 ### 3. 문자열 처리 및 대체
-정규 표현식은 문자열 처리와 대체 작업에 유용합니다. 텍스트 데이터에서 특정 패턴을 다른 문자열로 대체하거나, 특정 패턴에 맞는 문자열을 추출하거나 분리할 수 있습니다. 이를 통해 데이터를 변형하거나 필요한 정보를 추출하는 작업을 수행할 수 있습니다.<br>
+정규 표현식은 문자열 처리와 대체 작업에 유용하다. 텍스트 데이터에서 특정 패턴을 다른 문자열로 대체하거나, 특정 패턴에 맞는 문자열을 추출하거나 분리할 수 있다. 이를 통해 데이터를 변형하거나 필요한 정보를 추출하는 작업을 수행할 수 있다.<br>
 
 ## 메타문자란?
 원래 그 문자가 가진 뜻이 아닌 특별한 용도로 사용하는 문자 
@@ -86,6 +86,7 @@ ca+t = 최소 1번 이상 반복될 때 사용(*가 반복 횟수 0부터라면 
 
 match, search는 정규식과 매치될 때는 match 객체를 리턴하고, 매치되지 않을 때는 None을 리턴한다.
 
+
 우선 다음과 같은 패턴이 존재한다고 가정한다.
 
     >>> import re
@@ -106,3 +107,197 @@ match, search는 정규식과 매치될 때는 match 객체를 리턴하고, 매
 "3 python" 문자열은 처음에 나오는 문자 3이 정규식 [a-z]+에 부합되지 않으므로 None을 돌려준다.
 
 ### search
+
+    >>> m = p.search("python")
+    >>> print(m)
+    <re.Match object; span=(0, 6), match='python'>
+
+"python" 문자열에 search 메서드를 수행하면 match 메서드를 수행했을 때와 동일하게 매치된다.
+
+    >>> m = p.search("3 python")
+    >>> print(m)
+    <re.Match object; span=(2, 8), match='python'>
+
+"3 python" 문자열의 첫 번째 문자는 "3"이지만 search는 문자열의 처음부터 검색하는 것이 아니라 문자열 전체를 검색하기 때문에 "3 " 이후의 "python" 문자열과 매치된다.
+
+### findall
+
+    >>> result = p.findall("life is too short")
+    >>> print(result)
+    ['life', 'is', 'too', 'short']
+
+findall은 패턴([a-z]+)과 매치되는 모든 값을 찾아 리스트로 리턴한다.
+
+### finditer
+
+    >>> result = p.finditer("life is too short")
+    >>> print(result)
+    <callable_iterator object at 0x01F5E390>
+    >>> for r in result: print(r)
+    ...
+    <re.Match object; span=(0, 4), match='life'>
+    <re.Match object; span=(5, 7), match='is'>
+    <re.Match object; span=(8, 11), match='too'>
+    <re.Match object; span=(12, 17), match='short'>
+
+finditer는 findall과 동일하지만 그 결과로 반복 가능한 객체(iterator object)를 리턴한다. 그리고 반복 가능한 객체가 포함하는 각각의 요소는 match 객체이다.
+
+## match 객체의 메서드
+|Method|목적|
+|-----|-----|
+|group()|매치된 문자열을 리턴한다.|
+|start()|매치된 문자열의 시작 위치를 리턴한다.|
+|end()|매치된 문자열의 끝 위치를 리턴한다.|
+|span()|매치된 문자열의 (시작, 끝)에 해당하는 튜플을 리턴한다.|
+
+match 메서드
+
+    >>> m = p.match("python")
+    >>> m.group()
+    'python'
+    >>> m.start()
+    0
+    >>> m.end()
+    6
+    >>> m.span()
+    (0, 6)
+
+search 메서드
+
+    >>> m = p.search("3 python")
+    >>> m.group()
+    'python'
+    >>> m.start()
+    2
+    >>> m.end()
+    8
+    >>> m.span()
+    (2, 8)
+
+### 모듈 단위로 수행하기
+
+    >>> p = re.compile('[a-z]+')
+    >>> m = p.match("python")
+
+위 코드가 축약된 형태는 다음과 같다.
+
+    >>> m = re.match('[a-z]+', "python")
+
+위 예처럼 사용하면 컴파일과 match 메서드를 한 번에 수행할 수 있다. 보통 한 번 만든 패턴 객체를 여러번 사용해야 할 때는 이 방법보다 re.compile을 사용하는 것이 편하다.
+
+## 컴파일 옵션
+- DOTALL(S) : . 이 줄바꿈 문자를 포함하여 모든 문자와 매치할 수 있도록 한다.
+- IGNORECASE(I) : 대소문자에 관계없이 매치할 수 있도록 한다.
+- MULTILINE(M) : 여러줄과 매치할 수 있도록 한다. (^, $ 메타문자의 사용과 관계가 있는 옵션이다)
+- VERBOSE(X) : verbose 모드를 사용할 수 있도록 한다. (정규식을 보기 편하게 만들수 있고 주석등을 사용할 수 있게된다.)
+
+### DOTALL, S
+. 메타 문자는 줄바꿈 문자(\n)를 제외한 모든 문자와 매치되는 규칙이 있지만, \n 문자도 포함하여 매치하고 싶다면 re.DOTALL 또는 re.S 옵션을 사용해 정규식을 컴파일하면 된다.
+
+    >>> import re
+    >>> p = re.compile('a.b')
+    >>> m = p.match('a\nb')
+    >>> print(m)
+    None
+
+정규식이 a.b인 경우 문자열 a\nb는 매치되지 않음을 알 수 있다. 왜냐하면 \n은 . 메타 문자와 매치되지 않기 때문이다. \n 문자와도 매치되게 하려면 다음과 같이 re.DOTALL 옵션을 사용해야 한다.
+
+    >>> p = re.compile('a.b', re.DOTALL)
+    >>> m = p.match('a\nb')
+    >>> print(m)
+    <re.Match object; span=(0, 3), match='a\nb'>
+
+보통 re.DOTALL 옵션은 여러 줄로 이루어진 문자열에서 줄바꿈 문자에 상관없이 검색할 때 많이 사용한다.
+
+### IGNORECASE, I
+re.IGNORECASE 또는 re.I 옵션은 대소문자 구별 없이 매치를 수행할 때 사용하는 옵션
+
+    >>> p = re.compile('[a-z]+', re.I)
+    >>> p.match('python')
+    <re.Match object; span=(0, 6), match='python'>
+    >>> p.match('Python')
+    <re.Match object; span=(0, 6), match='Python'>
+    >>> p.match('PYTHON')
+    <re.Match object; span=(0, 6), match='PYTHON'>
+
+[a-z]+ 정규식은 소문자만을 의미하지만 re.I 옵션으로 대소문자 구별 없이 매치된다.
+
+### MULTILINE, M
+re.MULTILINE 옵션은 ^, $ 메타 문자를 문자열의 각 줄마다 적용해 주는 것
+- ※ ^는 문자열의 처음을 의미하고, $는 문자열의 마지막을 의미
+ * ^python = 문자열의 처음은 항상 python으로 시작
+ * python$ = 문자열의 마지막은 항상 python으로 끝
+
+    import re
+    p = re.compile("^python\s\w+")
+    
+    data = """python one
+    life is too short
+    python two
+    you need python
+    python three"""
+    
+    print(p.findall(data))
+    (^python\s\w+은 python이라는 문자열로 시작하고 그 뒤에 whitespace, 그 뒤에 단어가 와야 한다는 의미)
+    실행결과 : ['python one']
+
+(^ 메타 문자에 의해 python이라는 문자열을 사용한 첫 번째 줄만 매치되었기 때문)
+
+    import re
+    p = re.compile("^python\s\w+", re.MULTILINE)
+    
+    data = """python one
+    life is too short
+    python two
+    you need python
+    python three"""
+    
+    print(p.findall(data))
+    실행결과 : ['python one', 'python two', 'python three']
+
+re.MULTILINE 옵션으로 인해 ^ 메타 문자가 문자열 전체가 아닌 각 줄의 처음이라는 의미를 갖게 됨
+
+### VERBOSE, X
+정규식을 주석 또는 줄 단위로 구분
+
+    charref = re.compile(r'&[#](0[0-7]+|[0-9]+|x[0-9a-fA-F]+);')
+
+위 정규식을 쉽게 이해하기 위해 re.VERBOSE 옵션을 사용
+
+    charref = re.compile(r"""
+    &[#]                # Start of a numeric entity reference
+     (
+         0[0-7]+         # Octal form
+       | [0-9]+          # Decimal form
+       | x[0-9a-fA-F]+   # Hexadecimal form
+     )
+     ;                   # Trailing semicolon
+    """, re.VERBOSE)
+
+첫 번째와 두 번째 예를 비교해 보면 컴파일된 패턴 객체인 charref는 모두 동일한 역할을 한다. 하지만 정규식이 복잡할 경우 두 번째처럼 주석을 적고 여러 줄로 표현하는 것이 훨씬 가독성이 좋다는 것을 알 수 있다.
+
+## 백슬래시 문제
+"\section" 문자열을 찾기 위한 정규식을 만든다고 가정했을때 정규식 \section은 \s 문자가 whitespace로 해석되어 의도한 대로 매치가 이루어지지 않는다. 
+위 표현은 다음과 동일한 의미이다.
+
+    [ \t\n\r\f\v]ection
+    
+의도한 대로 매치하고 싶다면 다음과 같이 변경해야 한다.
+
+    \\section
+
+즉 위 정규식에서 사용한 \ 문자가 문자열 자체임을 알려 주기 위해 백슬래시 2개를 사용하여 이스케이프 처리를 해야 한다.
+
+따라서 위 정규식을 컴파일하려면 다음과 같이 작성해야 한다.
+
+    >>> p = re.compile('\\section')''
+
+위처럼 정규식을 만들어서 컴파일하면 실제 파이썬 정규식 엔진에는 파이썬 문자열 리터럴 규칙에 따라 \\이 \로 변경되어 \section이 전달되어 정규식 엔진에 \\ 문자를 전달하려면 파이썬은 \\\\처럼 백슬래시를 4개나 사용해야 한다.
+
+    >>> p = re.compile('\\\\section')
+
+위와 같이 \를 사용한 표현이 계속 반복되는 정규식같은 문제를 해결하려면 Raw String을 사용해야 한다. 그 방법은 다음과 같다.
+
+    >>> p = re.compile(r'\\section')
+
+위와 같이 정규식 문자열 앞에 r 문자를 삽입하면 이 정규식은 Raw String 규칙에 의하여 백슬래시 2개 대신 1개만 써도 2개를 쓴 것과 동일한 의미를 갖게 된다.(백슬래시를 사용하지 않는 정규식이라면 r의 유무에 상관없이 동일한 정규식이 될 것이다.)
