@@ -83,4 +83,26 @@ ca+t = 최소 1번 이상 반복될 때 사용(*가 반복 횟수 0부터라면 
 |search()|문자열 전체를 검색하여 정규식과 매치되는지 조사한다.|
 |findall()|정규식과 매치되는 모든 문자열(substring)을 리스트로 리턴한다.|
 |finditer()|정규식과 매치되는 모든 문자열(substring)을 반복 가능한 객체로 리턴한다.|
+
 match, search는 정규식과 매치될 때는 match 객체를 리턴하고, 매치되지 않을 때는 None을 리턴한다.
+
+우선 다음과 같은 패턴이 존재한다고 가정한다.
+
+    >>> import re
+    >>> p = re.compile('[a-z]+')
+
+### match
+
+    >>> m = p.match("python")
+    >>> print(m)
+    <re.Match object; span=(0, 6), match='python'>
+    
+"python" 문자열은 [a-z]+ 정규식에 부합되므로 match 객체를 돌려준다.
+
+    >>> m = p.match("3 python")
+    >>> print(m)
+    None
+
+"3 python" 문자열은 처음에 나오는 문자 3이 정규식 [a-z]+에 부합되지 않으므로 None을 돌려준다.
+
+### search
