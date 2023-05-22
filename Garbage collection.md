@@ -20,12 +20,57 @@ C / C++ 언어에서는 이러한 가비지 컬렉션이 없어 프로그래머�
     GC를 수행하기 위해 JVM이 프로그램 실행을 멈추는 현상을 의미.
     GC가 작동하는 동안 GC 관련 Thread를 제외한 모든 Thread는 멈추게 되어 서비스 이용에 차질이 생길 수 있다.
     따라서 이 시간을 최소화 시키는 것이 쟁점이다.
-![STW](/img/p2.png)
+![STW](/img/p2.png)   
 
 ## 기본적인 동작 메커니즘
-- Reachability Analysis(도달성 분석): 가비지컬렉션은 주어진 시점에서 어떤 객체가 사용 가능한지 판단하기 위해 도달성 분석을 수행한다. 주요 객체를 시작으로 해당 객체가 참조하는 다른 객체들을 추적하여 어떤 객체들이 도달 가능한지를 결정한다.
+- Reachability(도달능력) : GC는 사용되지 않는 객체를 식별하기 위해 도달성 개념을 사용한다. 즉, 객체가 다른 활성 객체로부터 도달 가능한지 여부에 따라 객체의 생존 여부를 결정한다.
 
-- Garbage Detection(가비지 탐지): 도달성 분석을 통해 도달 가능하지 않은 객체들, 즉 가비지 객체들을 식별한다. 이러한 가비지 객체들은 해제되어 메모리를 회수할 수 있는 대상이다.
+- Mark and Sweep(표시 및 해제) : 일반적인 GC 알고리즘 중 하나로, 객체의 도달 가능 여부를 판별하기 위해 Mark 단계와 사용되지 않는 객체를 해제하는 Sweep 단계로 구성된다.
 
-- Memory Reclamation(메모리 회수): 가비지 객체들의 메모리를 해제하여 재사용 가능한 메모리로 반환한다. 이 단계에서는 가비지 객체들을 실제로 메모리에서 제거하고, 해제된 메모리를 다시 사용 가능한 상태로 만든다.
+- Generational GC(세대별 GC) : Java의 일부 GC 구현에서는 메모리를 세대로 나누어 GC를 수행한다. 주로 새로 생성된 객체는 첫 번째 세대에 할당되고, 오래된 객체는 더 높은 세대로 이동하며 이를 통해 새로 생성된 객체의 대부분은 짧은 시간 내에 사라지는 특성을 활용하여 GC 성능을 향상시킨다.
 
+## Reachability
+가비지 컬렉션은 특정 객체가 garbage인지 아닌지 판단하기 위해서 도달성, 도달능력(Reachability) 이라는 개념을 적용한다.   
+객체에 레퍼런스가 있다면 Reachable로 구분되고, 객체에 유효한 레퍼런스가 없다면 Unreachable로 구분해버리고 수거해버린다.
+![Reachability](/img/p3.png)   
+JVM 메모리에서는 객체들은 실질적으로 Heap영역에서 생성되고 Method Area이나 Stack Area 에서는 Heap Area에 생성된 객체의 주소만 참조하는 형식으로 구성된다.   
+하지만 이렇게 생성된 Heap Area의 객체들이 메서드가 끝나는 등의 특정 이벤트들로 인하여 Heap Area 객체의 메모리 주소를 가지고 있는 참조 변수가 삭제되는 현상이 발생하면, 위의 그림에서의 빨간색 객체와 같이 Heap영역에서 어디서든 참조하고 있지 않은 객체(Unreachable)들이 발생하게 된다.   
+이러한 객체들을 주기적으로 가비지 컬렉터가 제거해주는 것이다.
+
+## Mark and Sweep
+Mark-Sweep 이란 다양한 GC에서 사용되는 객체를 솎아내는 내부 알고리즘이다.   
+가비지 컬렉션이 동작하는 아주 기초적인 청소 과정이라고 생각하면 된다.
+![Mark and Sweep](/img/p4.png)   
+원리로는 가비지 컬렉션이 될 대상 객체를 식별(Mark)하고 제거(Sweep)하며 객체가 제거되어 파편화된 메모리 영역을 앞에서부터 채워나가는 작업(Compaction)을 수행하게 된다.   
+- Mark 과정 : 먼저 Root Space로부터 그래프 순회를 통해 연결된 객체들을 찾아내어 각각 어떤 객체를 참조하고 있는지 찾아서 마킹한다.
+- Sweep 과정 : 참조하고 있지 않은 객체 즉 Unreachable 객체들을 Heap에서 제거한다.
+- Compact 과정 : Sweep 후에 분산된 객체들을 Heap의 시작 주소로 모아 메모리가 할당된 부분과 그렇지 않은 부분으로 압축한다. (가비지 컬렉터 종류에 따라 하지 않는 경우도 있음)
+
+## 가비지 컬렉션 동작 코드 작성
+'''public class MyClass {
+    private String name;
+
+    public MyClass(String name) {
+        this.name = name;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        System.out.println(name + " is being finalized.");
+    }
+
+    public static void main(String[] args) {
+        MyClass obj1 = new MyClass("Object 1");
+        MyClass obj2 = new MyClass("Object 2");
+
+        obj1 = null; // obj1에 대한 참조 제거
+        System.gc(); // 가비지 컬렉터 명시적 호출
+
+        // 이 지점에서 가비지 컬렉터가 동작하여 "Object 1 is being finalized."을 출력할 것입니다.
+
+        obj2 = null; // obj2에 대한 참조 제거
+        // 가비지 컬렉터가 동작하여 "Object 2 is being finalized."을 출력할 것입니다.
+    }
+}
+'''
