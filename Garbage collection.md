@@ -1,6 +1,6 @@
 # 가비지 컬렉션(Garbage Collection)
 가비지 컬렉션(Garbage Collection)은 자바의 메모리 관리 방법 중의 하나로 JVM(자바 가상 머신)의 Heap 영역에서 동적으로 할당했던 메모리 중 필요 없게 된 메모리 객체(garbage)를 모아 주기적으로 제거하는 프로세스를 말한다.
-![Garbage Collection](./img/p1.png "Optional title")
+![Garbage Collection](/img/p1.png "Garbage Collection")
 
 ## 필요한 이유
 - 메모리 누수 방지 : 프로그램이 실행되는 동안 메모리를 동적으로 할당하고 사용하지만 개발자가 명시적으로 메모리를 해제하지 않거나 잘못된 방법으로 해제하는 경우 메모리 누수가 발생할 수 있다. 가비지 컬렉션은 이러한 누수된 메모리를 탐지하여 해제함으로써 메모리 사용량을 최적화하고 누수를 방지한다.
