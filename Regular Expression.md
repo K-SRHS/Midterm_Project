@@ -116,31 +116,31 @@ None
 >>> print(p.search('one subclass is'))
 None
 ```
-
-    위 예제들의 문자열 안에도 class 문자열이 포함되어 있긴 하지만 whitespace로 구분된 단어가 아니므로 매치되지 않는다
+위 예제들의 문자열 안에도 class 문자열이 포함되어 있긴 하지만 whitespace로 구분된 단어가 아니므로 매치되지 않는다   
 
 \b는 파이썬 리터럴 규칙에 의하면 백스페이스(BackSpace)를 의미하므로 백스페이스가 아닌 단어 구분자임을 알려 주기 위해 r'\bclass\b'처럼 Raw string임을 알려주는 기호 r을 반드시 붙여 주어야 한다.
 
 ### \B
 \B 메타 문자는 \b 메타 문자와 반대로 whitespace로 구분된 단어가 아닌 경우에만 매치된다.
-
-    >>> p = re.compile(r'\Bclass\B')
-    >>> print(p.search('no class at all'))  
-    None
-    >>> print(p.search('the declassified algorithm'))
-    <re.Match object; span=(6, 11), match='class'>
-    >>> print(p.search('one subclass is'))
-    None
-
+```python
+>>> p = re.compile(r'\Bclass\B')
+>>> print(p.search('no class at all'))  
+None
+>>> print(p.search('the declassified algorithm'))
+<re.Match object; span=(6, 11), match='class'>
+>>> print(p.search('one subclass is'))
+None
+```
 class 단어의 앞뒤에 whitespace가 하나라도 있는 경우에는 매치가 안 되는 것을 확인할 수 있다.
 
 ## 파이썬에서 정규 표현식을 지원하는 re 모듈
 파이썬은 정규 표현식을 지원하기 위해 re(regular expression의 약어) 모듈을 제공한다. re 모듈은 파이썬을 설치할 때 자동으로 설치되는 표준 라이브러리이다.
 
-    ex) 정규표현식'ab*'을 컴파일하여 패턴 객체 'p'를 생성하는 예제
-    >>> import re
-    >>> p = re.compile('ab*')
-
+ex) 정규표현식'ab*'을 컴파일하여 패턴 객체 'p'를 생성하는 예제
+```python
+>>> import re
+>>> p = re.compile('ab*')
+```
 ## 정규식을 이용한 문자열 검색
 컴파일된 패턴 객체를 사용하여 문자열 검색을 수행하는 4가지 메서드
 |Method|목적|
@@ -154,58 +154,58 @@ match, search는 정규식과 매치될 때는 match 객체를 리턴하고, 매
 
 
 우선 다음과 같은 패턴이 존재한다고 가정한다.
-
-    >>> import re
-    >>> p = re.compile('[a-z]+')
-
+```python
+>>> import re
+>>> p = re.compile('[a-z]+')
+```
 ### match
-
-    >>> m = p.match("python")
-    >>> print(m)
-    <re.Match object; span=(0, 6), match='python'>
-    
+```python
+>>> m = p.match("python")
+>>> print(m)
+<re.Match object; span=(0, 6), match='python'>
+```   
 "python" 문자열은 [a-z]+ 정규식에 부합되므로 match 객체를 돌려준다.
-
-    >>> m = p.match("3 python")
-    >>> print(m)
-    None
-
+```python
+>>> m = p.match("3 python")
+>>> print(m)
+None
+```
 "3 python" 문자열은 처음에 나오는 문자 3이 정규식 [a-z]+에 부합되지 않으므로 None을 돌려준다.
 
 ### search
-
-    >>> m = p.search("python")
-    >>> print(m)
-    <re.Match object; span=(0, 6), match='python'>
-
+```python
+>>> m = p.search("python")
+>>> print(m)
+<re.Match object; span=(0, 6), match='python'>
+```
 "python" 문자열에 search 메서드를 수행하면 match 메서드를 수행했을 때와 동일하게 매치된다.
-
-    >>> m = p.search("3 python")
-    >>> print(m)
-    <re.Match object; span=(2, 8), match='python'>
-
+```python
+>>> m = p.search("3 python")
+>>> print(m)
+<re.Match object; span=(2, 8), match='python'>
+```
 "3 python" 문자열의 첫 번째 문자는 "3"이지만 search는 문자열의 처음부터 검색하는 것이 아니라 문자열 전체를 검색하기 때문에 "3 " 이후의 "python" 문자열과 매치된다.
 
 ### findall
-
-    >>> result = p.findall("life is too short")
-    >>> print(result)
-    ['life', 'is', 'too', 'short']
-
+```python
+>>> result = p.findall("life is too short")
+>>> print(result)
+['life', 'is', 'too', 'short']
+```
 findall은 패턴([a-z]+)과 매치되는 모든 값을 찾아 리스트로 리턴한다.
 
 ### finditer
-
-    >>> result = p.finditer("life is too short")
-    >>> print(result)
-    <callable_iterator object at 0x01F5E390>
-    >>> for r in result: print(r)
-    ...
-    <re.Match object; span=(0, 4), match='life'>
-    <re.Match object; span=(5, 7), match='is'>
-    <re.Match object; span=(8, 11), match='too'>
-    <re.Match object; span=(12, 17), match='short'>
-
+```python
+>>> result = p.finditer("life is too short")
+>>> print(result)
+<callable_iterator object at 0x01F5E390>
+>>> for r in result: print(r)
+...
+<re.Match object; span=(0, 4), match='life'>
+<re.Match object; span=(5, 7), match='is'>
+<re.Match object; span=(8, 11), match='too'>
+<re.Match object; span=(12, 17), match='short'>
+```
 finditer는 findall과 동일하지만 그 결과로 반복 가능한 객체(iterator object)를 리턴한다. 그리고 반복 가능한 객체가 포함하는 각각의 요소는 match 객체이다.
 
 ## match 객체의 메서드
@@ -217,38 +217,38 @@ finditer는 findall과 동일하지만 그 결과로 반복 가능한 객체(ite
 |span()|매치된 문자열의 (시작, 끝)에 해당하는 튜플을 리턴한다.|
 
 match 메서드
-
-    >>> m = p.match("python")
-    >>> m.group()
-    'python'
-    >>> m.start()
-    0
-    >>> m.end()
-    6
-    >>> m.span()
-    (0, 6)
-
+```python
+>>> m = p.match("python")
+>>> m.group()
+'python'
+>>> m.start()
+0
+>>> m.end()
+6
+>>> m.span()
+(0, 6)
+```
 search 메서드
-
-    >>> m = p.search("3 python")
-    >>> m.group()
-    'python'
-    >>> m.start()
-    2
-    >>> m.end()
-    8
-    >>> m.span()
-    (2, 8)
-
+```python
+>>> m = p.search("3 python")
+>>> m.group()
+'python'
+>>> m.start()
+2
+>>> m.end()
+8
+>>> m.span()
+(2, 8)
+```
 ### 모듈 단위로 수행하기
-
-    >>> p = re.compile('[a-z]+')
-    >>> m = p.match("python")
-
+```python
+>>> p = re.compile('[a-z]+')
+>>> m = p.match("python")
+```
 위 코드가 축약된 형태는 다음과 같다.
-
-    >>> m = re.match('[a-z]+', "python")
-
+```python
+>>> m = re.match('[a-z]+', "python")
+```
 위 예처럼 사용하면 컴파일과 match 메서드를 한 번에 수행할 수 있다. 보통 한 번 만든 패턴 객체를 여러번 사용해야 할 때는 이 방법보다 re.compile을 사용하는 것이 편하다.
 
 ## 컴파일 옵션
@@ -259,66 +259,68 @@ search 메서드
 
 ### DOTALL, S
 . 메타 문자는 줄바꿈 문자(\n)를 제외한 모든 문자와 매치되는 규칙이 있지만, \n 문자도 포함하여 매치하고 싶다면 re.DOTALL 또는 re.S 옵션을 사용해 정규식을 컴파일하면 된다.
-
-    >>> import re
-    >>> p = re.compile('a.b')
-    >>> m = p.match('a\nb')
-    >>> print(m)
-    None
-
+```python
+>>> import re
+>>> p = re.compile('a.b')
+>>> m = p.match('a\nb')
+>>> print(m)
+None
+```
 정규식이 a.b인 경우 문자열 a\nb는 매치되지 않음을 알 수 있다. 왜냐하면 \n은 . 메타 문자와 매치되지 않기 때문이다. \n 문자와도 매치되게 하려면 다음과 같이 re.DOTALL 옵션을 사용해야 한다.
-
-    >>> p = re.compile('a.b', re.DOTALL)
-    >>> m = p.match('a\nb')
-    >>> print(m)
-    <re.Match object; span=(0, 3), match='a\nb'>
-
+```python
+>>> p = re.compile('a.b', re.DOTALL)
+>>> m = p.match('a\nb')
+>>> print(m)
+<re.Match object; span=(0, 3), match='a\nb'>
+```
 보통 re.DOTALL 옵션은 여러 줄로 이루어진 문자열에서 줄바꿈 문자에 상관없이 검색할 때 많이 사용한다.
 
 ### IGNORECASE, I
 re.IGNORECASE 또는 re.I 옵션은 대소문자 구별 없이 매치를 수행할 때 사용하는 옵션
-
-    >>> p = re.compile('[a-z]+', re.I)
-    >>> p.match('python')
-    <re.Match object; span=(0, 6), match='python'>
-    >>> p.match('Python')
-    <re.Match object; span=(0, 6), match='Python'>
-    >>> p.match('PYTHON')
-    <re.Match object; span=(0, 6), match='PYTHON'>
-
+```python
+>>> p = re.compile('[a-z]+', re.I)
+>>> p.match('python')
+<re.Match object; span=(0, 6), match='python'>
+>>> p.match('Python')
+<re.Match object; span=(0, 6), match='Python'>
+>>> p.match('PYTHON')
+<re.Match object; span=(0, 6), match='PYTHON'>
+```
 [a-z]+ 정규식은 소문자만을 의미하지만 re.I 옵션으로 대소문자 구별 없이 매치된다.
 
 ### MULTILINE, M
 re.MULTILINE 옵션은 ^, $ 메타 문자를 문자열의 각 줄마다 적용해 주는 것
 - ^python = 문자열의 처음은 항상 python으로 시작
 - python$ = 문자열의 마지막은 항상 python으로 끝
+```python
+import re
+p = re.compile("^python\s\w+")
 
-    import re
-    p = re.compile("^python\s\w+")
-    
-    data = """python one
-    life is too short
-    python two
-    you need python
-    python three"""
-    
-    print(p.findall(data))
-    (^python\s\w+은 python이라는 문자열로 시작하고 그 뒤에 whitespace, 그 뒤에 단어가 와야 한다는 의미)
-    실행결과 : ['python one']
+data = """python one
+life is too short
+python two
+you need python
+python three"""
+
+print(p.findall(data))
+```
+(^python\s\w+은 python이라는 문자열로 시작하고 그 뒤에 whitespace, 그 뒤에 단어가 와야 한다는 의미)
+실행결과 : ['python one']
 
 (^ 메타 문자에 의해 python이라는 문자열을 사용한 첫 번째 줄만 매치되었기 때문)
+```python
+import re
+p = re.compile("^python\s\w+", re.MULTILINE)
 
-    import re
-    p = re.compile("^python\s\w+", re.MULTILINE)
-    
-    data = """python one
-    life is too short
-    python two
-    you need python
-    python three"""
-    
-    print(p.findall(data))
-    실행결과 : ['python one', 'python two', 'python three']
+data = """python one
+life is too short
+python two
+you need python
+python three"""
+
+print(p.findall(data))
+```
+실행결과 : ['python one', 'python two', 'python three']
 
 re.MULTILINE 옵션으로 인해 ^ 메타 문자가 문자열 전체가 아닌 각 줄의 처음이라는 의미를 갖게 됨
 
