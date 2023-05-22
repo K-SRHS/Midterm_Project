@@ -78,12 +78,12 @@ ca+t = 최소 1번 이상 반복될 때 사용(*가 반복 횟수 0부터라면 
 
 ### ^
 ^는 문자열의 맨 처음과 일치함을 의미한다.
-
-    >>> print(re.search('^Life', 'Life is too short'))
-    <re.Match object; span=(0, 4), match='Life'>
-    >>> print(re.search('^Life', 'My Life'))
-    None
-
+```python
+print(re.search('^Life', 'Life is too short'))
+<re.Match object; span=(0, 4), match='Life'>
+print(re.search('^Life', 'My Life'))
+None
+```
 ^Life 정규식은 Life 문자열이 처음에 온 경우에는 매치하지만 처음 위치가 아닌 경우에는 매치되지 않음
 
 ### $
