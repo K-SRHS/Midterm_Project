@@ -48,8 +48,8 @@ Mark-Sweep 이란 다양한 GC에서 사용되는 객체를 솎아내는 내부 
 
 ## 가비지 컬렉션 동작 코드 작성
 
-    '''java
-    public class MyClass {
+```java
+public class MyClass {
         private String name;
     
         public MyClass(String name) {
@@ -75,4 +75,35 @@ Mark-Sweep 이란 다양한 GC에서 사용되는 객체를 솎아내는 내부 
             // 가비지 컬렉터가 동작하여 "Object 2 is being finalized."을 출력
         }
     }
-    '''
+```
+
+## 가바지 컬렉션 메모리 leak 발생 코드 작성
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class MemoryLeakExample {
+    private static List<String> data = new ArrayList<>();
+
+    public static void main(String[] args) {
+        while (true) {
+            String input = getUserInput();
+            processInput(input);
+            data.add(input);
+        }
+    }
+
+    private static String getUserInput() {
+        // 사용자로부터 입력 받는 로직
+        return "userInput";
+    }
+
+    private static void processInput(String input) {
+        // 입력 처리 로직
+    }
+}
+
+```
+### 이 예제에서 메모리 누수 발생하는 이유
+data 리스트에 계속해서 데이터가 추가되지만, 더 이상 필요하지 않은 데이터는 제거되지 않기 때문   
+즉, data 리스트는 점점 더 커지고 메모리를 계속 점유하게 된다. 이러한 상황에서 가비지 컬렉터는 data 리스트에 대한 참조가 계속 유지되어 있는 한 해당 객체들을 회수하지 못하게 된다.
