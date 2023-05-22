@@ -70,12 +70,12 @@ ca+t = 최소 1번 이상 반복될 때 사용(*가 반복 횟수 0부터라면 
 
 ### |
 | 메타 문자는 or과 동일한 의미로 사용된다. A|B라는 정규식이 있다면 A 또는 B라는 의미가 된다.
-
+```python
     >>> p = re.compile('Crow|Servo')
     >>> m = p.match('CrowHello')
     >>> print(m)
     <re.Match object; span=(0, 4), match='Crow'>
-
+```
 ### ^
 ^는 문자열의 맨 처음과 일치함을 의미한다.
 ```python
