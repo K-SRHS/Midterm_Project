@@ -47,6 +47,7 @@ Mark-Sweep 이란 다양한 GC에서 사용되는 객체를 솎아내는 내부 
 - Compact 과정 : Sweep 후에 분산된 객체들을 Heap의 시작 주소로 모아 메모리가 할당된 부분과 그렇지 않은 부분으로 압축한다. (가비지 컬렉터 종류에 따라 하지 않는 경우도 있음)
 
 ## 가비지 컬렉션 동작 코드 작성
+
 '''java
 public class MyClass {
     private String name;
@@ -74,5 +75,4 @@ public class MyClass {
         // 가비지 컬렉터가 동작하여 "Object 2 is being finalized."을 출력할 것입니다.
     }
 }
-
 '''
