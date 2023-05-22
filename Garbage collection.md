@@ -48,31 +48,31 @@ Mark-Sweep 이란 다양한 GC에서 사용되는 객체를 솎아내는 내부 
 
 ## 가비지 컬렉션 동작 코드 작성
 
-'''java
-public class MyClass {
-    private String name;
-
-    public MyClass(String name) {
-        this.name = name;
+    '''java
+    public class MyClass {
+        private String name;
+    
+        public MyClass(String name) {
+            this.name = name;
+        }
+    
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
+            System.out.println(name + " is being finalized.");
+        }
+    
+        public static void main(String[] args) {
+            MyClass obj1 = new MyClass("Object 1");
+            MyClass obj2 = new MyClass("Object 2");
+    
+            obj1 = null; // obj1에 대한 참조 제거
+            System.gc(); // 가비지 컬렉터 명시적 호출
+    
+            // 이 지점에서 가비지 컬렉터가 동작하여 "Object 1 is being finalized."을 출력
+    
+            obj2 = null; // obj2에 대한 참조 제거
+            // 가비지 컬렉터가 동작하여 "Object 2 is being finalized."을 출력
+        }
     }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        System.out.println(name + " is being finalized.");
-    }
-
-    public static void main(String[] args) {
-        MyClass obj1 = new MyClass("Object 1");
-        MyClass obj2 = new MyClass("Object 2");
-
-        obj1 = null; // obj1에 대한 참조 제거
-        System.gc(); // 가비지 컬렉터 명시적 호출
-
-        // 이 지점에서 가비지 컬렉터가 동작하여 "Object 1 is being finalized."을 출력할 것입니다.
-
-        obj2 = null; // obj2에 대한 참조 제거
-        // 가비지 컬렉터가 동작하여 "Object 2 is being finalized."을 출력할 것입니다.
-    }
-}
-'''
+    '''
