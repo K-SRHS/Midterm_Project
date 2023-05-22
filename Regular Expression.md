@@ -529,7 +529,7 @@ non-greedy 문자인 ?는 *?, +?, ??, {m,n}?와 같이 사용할 수 있다.
     >>> print(re.match('<.*>', s).group())
     <html><head><title>Title</title>
 
-<html> 문자열을 돌려받는법
+non-greedy 문자를 사용하여 html 문자열을 돌려받는법
 
     >>> print(re.match('<.*?>', s).group())
     <html>
