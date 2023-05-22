@@ -71,10 +71,10 @@ ca+t = 최소 1번 이상 반복될 때 사용(*가 반복 횟수 0부터라면 
 ### |
 | 메타 문자는 or과 동일한 의미로 사용된다. A|B라는 정규식이 있다면 A 또는 B라는 의미가 된다.
 ```python
-    >>> p = re.compile('Crow|Servo')
-    >>> m = p.match('CrowHello')
-    >>> print(m)
-    <re.Match object; span=(0, 4), match='Crow'>
+>>> p = re.compile('Crow|Servo')
+>>> m = p.match('CrowHello')
+>>> print(m)
+<re.Match object; span=(0, 4), match='Crow'>
 ```
 ### ^
 ^는 문자열의 맨 처음과 일치함을 의미한다.
@@ -88,12 +88,12 @@ None
 
 ### $
 $는 문자열의 끝과 매치함을 의미한다.
-
-    >>> print(re.search('short$', 'Life is too short'))
-    <re.Match object; span=(12, 17), match='short'>
-    >>> print(re.search('short$', 'Life is too short, you need python'))
-    None
-
+```python
+>>> print(re.search('short$', 'Life is too short'))
+<re.Match object; span=(12, 17), match='short'>
+>>> print(re.search('short$', 'Life is too short, you need python'))
+None
+```
 short$ 정규식은 검색할 문자열이 short로 끝난 경우에는 매치되지만 그 이외의 경우에는 매치되지 않음
 
 ### \A
@@ -104,17 +104,19 @@ short$ 정규식은 검색할 문자열이 short로 끝난 경우에는 매치�
 
 ### \b
 단어 구분자(Word boundary)로 보통 단어는 whitespace에 의해 구분된다.
-
-    >>> p = re.compile(r'\bclass\b')
-    >>> print(p.search('no class at all'))  
-    <re.Match object; span=(3, 8), match='class'>
-
+```python
+>>> p = re.compile(r'\bclass\b')
+>>> print(p.search('no class at all'))  
+<re.Match object; span=(3, 8), match='class'>
+```
 \bclass\b 정규식은 앞뒤가 whitespace로 구분된 class라는 단어와 매치됨을 의미한다. 따라서 no class at all의 class라는 단어와 매치됨을 확인할 수 있다.
+```python
+>>> print(p.search('the declassified algorithm'))
+None
+>>> print(p.search('one subclass is'))
+None
+```
 
-    >>> print(p.search('the declassified algorithm'))
-    None
-    >>> print(p.search('one subclass is'))
-    None
     위 예제들의 문자열 안에도 class 문자열이 포함되어 있긴 하지만 whitespace로 구분된 단어가 아니므로 매치되지 않는다
 
 \b는 파이썬 리터럴 규칙에 의하면 백스페이스(BackSpace)를 의미하므로 백스페이스가 아닌 단어 구분자임을 알려 주기 위해 r'\bclass\b'처럼 Raw string임을 알려주는 기호 r을 반드시 붙여 주어야 한다.
