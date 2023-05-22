@@ -26,7 +26,7 @@
    3. [findall](#findall)
    4. [finditer](#finditer)
 6. [match 객체의 메서드](#match-객체의-메서드)
-    - [모듈 단위로 수행하기](모듈-단위로-수행하기)
+    - [모듈 단위로 수행하기](#모듈-단위로-수행하기)
 7. [컴파일 옵션](#컴파일-옵션)
     - [DOTALL, S](#dotall-s)
     - [IGNORECASE, I](#ignorecase-i)
